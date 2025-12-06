@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Code Assistant – Fiber APIs</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 20px;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #1f2937;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      font-family: monospace;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #2563eb;
+      color: #f9fafb;
+      font-weight: 500;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    pre {
+      background: #020617;
+      padding: 10px;
+      border-radius: 8px;
+      min-height: 60px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border: 1px dashed #374151;
+    }
+    .label {
+      font-size: 0.9rem;
+      margin: 4px 0;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <h1>Code Assistant – Fiber APIs</h1>
+
+  <div class="container">
+    <!-- RUN -->
+    <div class="card">
+      <h2>/run</h2>
+      <div class="label">Input Code</div>
+      <textarea id="runCode" placeholder="println(&quot;Hello from /run&quot;)"></textarea>
+      <button onclick="callRun()">Run Code</button>
+      <div class="label">Response</div>
+      <pre id="runResult"></pre>
+    </div>
+
+    <!-- AUTOFIX -->
+    <div class="card">
+      <h2>/autofix</h2>
+      <div class="label">Input Code</div>
+      <textarea id="fixCode" placeholder="int x = 5&#10;if(x &gt; 3) {&#10;console.log(&quot;hi&quot;)&#10;}"></textarea>
+      <button onclick="callAutoFix()">Auto Fix</button>
+      <div class="label">Fixed Code</div>
+      <pre id="fixResult"></pre>
+    </div>
+
+    <!-- HELP -->
+    <div class="card">
+      <h2>/help</h2>
+      <div class="label">Query</div>
+      <input id="helpQuery" placeholder="how to write for loop?" />
+      <button onclick="callHelp()">Get Help</button>
+      <div class="label">Answer</div>
+      <pre id="helpResult"></pre>
+    </div>
+  </div>
+
+  <script>
+    async function callRun() {
+      const code = document.getElementById("runCode").value;
+      const resultEl = document.getElementById("runResult");
+      resultEl.textContent = "Loading...";
+
+      try {
+        const res = await fetch("/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code }),
+        });
+        const data = await res.json();
+        resultEl.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultEl.textContent = "Error: " + err;
+      }
+    }
+
+    async function callAutoFix() {
+      const code = document.getElementById("fixCode").value;
+      const resultEl = document.getElementById("fixResult");
+      resultEl.textContent = "Loading...";
+
+      try {
+        const res = await fetch("/autofix", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code }),
+        });
+        const data = await res.json();
+        resultEl.textContent = data.fixedCode || JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultEl.textContent = "Error: " + err;
+      }
+    }
+
+    async function callHelp() {
+      const query = document.getElementById("helpQuery").value;
+      const resultEl = document.getElementById("helpResult");
+      resultEl.textContent = "Loading...";
+
+      try {
+        const res = await fetch("/help", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query }),
+        });
+        const data = await res.json();
+        resultEl.textContent = data.answer || JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultEl.textContent = "Error: " + err;
+      }
+    }
+  </script>
+</body>
+</html>
+
