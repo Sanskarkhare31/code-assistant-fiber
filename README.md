@@ -1,63 +1,129 @@
-Code Assistant – Go Fiber Backend
+# Code Assistant – Go Fiber Backend
 
-A simple backend service built using Go Fiber.
-APIs included:
+A simple backend service built using **Go Fiber**.  
+It includes APIs to:
 
-1. POST /run
+- Run code (simulated)
+- Auto-fix formatting issues
+- Provide help suggestions
+- A small HTML UI to test everything
 
-Simulates code execution.
-Input: Raw code
-Output: Execution result or simulated messages.
+---
 
-2. POST /autofix
+## How to Run
 
-Automatically fixes common formatting issues:
-
-Adds missing semicolons
-
-Fixes indentation
-
-Removes extra spaces
-
-Corrects bracket issues
-
-3. POST /help
-
-Returns predefined help messages based on keyword matching.
-
-How to Run
+```
 go run .
+```
 
+Server starts at:
 
-Server will start at:
-
+```
 http://localhost:3000
+```
 
-Testing
+Visit this URL to open the HTML testing page.
 
-A simple HTML UI is provided in /public/index.html
-Visit:
+---
 
-http://localhost:3000
+## API Endpoints
 
+### 1. POST /run  
+Simulates code execution and returns output.
 
-You can test:
+**Request Body (text):**
+```
+println("Hello Sanskar")
+```
 
-Run Code
+**Response:**
+```json
+{
+  "output": "\"Hello Sanskar\""
+}
+```
 
-Auto Fix
+---
 
-Help API
+### 2. POST /autofix  
+Fixes common formatting issues:
 
-Endpoints (for Postman)
-Run Code
+- Missing semicolons  
+- Braces formatting  
+- Indentation  
+- Extra spaces  
+
+**Input:**
+```
+int x = 5
+if(x > 3) {
+console.log("hi")
+}
+```
+
+**Output:**
+```
+int x = 5;
+if (x > 3) {
+    console.log("hi");
+}
+```
+
+---
+
+### 3. POST /help  
+Returns predefined suggestions.
+
+**Input:**
+```
+how to write loop?
+```
+
+**Output:**
+```
+Tip: Use a for-loop like: for(int i = 0; i < n; i++) { }
+```
+
+---
+
+## Testing with Postman
+
+### Run Code
+```
 POST http://localhost:3000/run
-Body → raw text → (your code)
+Body → raw → (your code)
+```
 
-Auto Fix
+### Auto Fix
+```
 POST http://localhost:3000/autofix
-Body → raw text → (your code)
+Body → raw → (your code)
+```
 
-Help
+### Help
+```
 POST http://localhost:3000/help
-Body → raw text → (your query)
+Body → raw → (your query)
+```
+
+---
+
+## Project Structure
+
+```
+code-assistant-fiber/
+│── main.go
+│── go.mod
+│── go.sum
+│── public/
+│     └── index.html
+```
+
+---
+
+## Contact
+
+Sanskar Khare  
+Email: sanskarkhare3128@gmail.com  
+GitHub: https://github.com/Sanskarkhare31
+
